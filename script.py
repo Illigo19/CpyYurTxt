@@ -81,7 +81,7 @@ if ipdb == 0:
 def client(x):
     print(x)
 
-    hote = "localhost"
+    hote = x
     port = 12800
 
     connexion_avec_serveur = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
