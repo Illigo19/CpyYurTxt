@@ -79,9 +79,9 @@ if ipdb == 0:
 
 
 def client(x):
-    print(x)
-
+    
     hote = x
+    print(type(hote))
     port = 12800
 
     connexion_avec_serveur = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -89,23 +89,28 @@ def client(x):
     print("Connexion établie avec le serveur sur le port {}".format(port))
 
     msg_a_envoyer = b""
-
     cl = ""
     while msg_a_envoyer != b"fin":
-
-
         msg_a_envoyer = pyperclip.paste()
-        if msg_a_envoyer != cl :
+        if msg_a_envoyer != cl:
 
-            msg_a_envoyer = msg_a_envoyer.encode()
-            connexion_avec_serveur.send(msg_a_envoyer)
-            msg_recu = connexion_avec_serveur.recv(1024)
             cl = msg_a_envoyer
 
+            msg_a_envoyer = msg_a_envoyer.encode()
+            # On envoie le message
+            connexion_avec_serveur.send(msg_a_envoyer)
+            msg_recu = connexion_avec_serveur.recv(1024)
+            print(msg_recu.decode())
+        
+
+         # Là encore, peut planter s'il y a des accents
 
     print("Fermeture de la connexion")
     connexion_avec_serveur.close()
+            
 
+
+    
 
 def serv():
     hote = ''
@@ -120,11 +125,12 @@ def serv():
 
     msg_recu = b""
     while msg_recu != b"fin":
-
         msg_recu = connexion_avec_client.recv(1024)
+        # L'instruction ci-dessous peut lever une exception si le message
+        # Réceptionné comporte des accents
         se = msg_recu.decode()
+        print(se)
         pyperclip.copy(se)
-        
         connexion_avec_client.send(b"5 / 5")
 
     print("Fermeture de la connexion")
@@ -149,6 +155,7 @@ def conn():
             pass
         elif answer == "2":
             print("client mod")
+            print(ipre[0])
             client(ipre[0])
 
 
