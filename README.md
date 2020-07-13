@@ -1,3 +1,5 @@
+<img src="https://github.com/Illigo19/CpyYurTxt/blob/master/source/Copyyrtext.jpg" width="70%">
+
 # CpyYurTxt
 CopyYourText, est un systéme de réseau fonctionnent grâce à un systeme de socket, le principe est de partager le presse-papier entre les ordinateurs. 
 
