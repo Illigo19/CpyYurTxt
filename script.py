@@ -14,6 +14,7 @@ Illigo ---- 2020
 # on import les libraries
 import socket 
 import mysql.connector
+import pyperclip
 
 
 
@@ -75,7 +76,92 @@ if ipdb == 0:
     query = "INSERT INTO user (ip) VALUES (%s) "
     mycursor.execute(query, (ip, ) )
     mydb.commit() 
+
+
+def client(x):
+    print(x)
+
+    hote = "localhost"
+    port = 12800
+
+    connexion_avec_serveur = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    connexion_avec_serveur.connect((hote, port))
+    print("Connexion établie avec le serveur sur le port {}".format(port))
+
+    msg_a_envoyer = b""
+
+    cl = ""
+    while msg_a_envoyer != b"fin":
+
+
+        msg_a_envoyer = pyperclip.paste()
+        if msg_a_envoyer != cl :
+
+            msg_a_envoyer = msg_a_envoyer.encode()
+            connexion_avec_serveur.send(msg_a_envoyer)
+            msg_recu = connexion_avec_serveur.recv(1024)
+            cl = msg_a_envoyer
+
+
+    print("Fermeture de la connexion")
+    connexion_avec_serveur.close()
+
+
+def serv():
+    hote = ''
+    port = 12800
+
+    connexion_principale = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    connexion_principale.bind((hote, port))
+    connexion_principale.listen(5)
+    print("Le serveur écoute à présent sur le port {}".format(port))
+
+    connexion_avec_client, infos_connexion = connexion_principale.accept()
+
+    msg_recu = b""
+    while msg_recu != b"fin":
+
+        msg_recu = connexion_avec_client.recv(1024)
+        se = msg_recu.decode()
+        pyperclip.copy(se)
+        
+        connexion_avec_client.send(b"5 / 5")
+
+    print("Fermeture de la connexion")
+    connexion_avec_client.close()
+    connexion_principale.close()
+
     
+
+
+        
+def conn():
+    a = len(ipre)
+    print(a)
+    if a >= 1:
+        print("SERVER OR CLIENT \n")
+        print("1 : server \n2 : client")
+        answer = input("> ")
+        if answer == "1":
+            print("server mod")
+            serv()
+
+            pass
+        elif answer == "2":
+            print("client mod")
+            client(ipre[0])
+
+
+
+    else:
+        print("No IP renseigned")
+        print("You can also been server !!!")
+        answer = input(" You want ? (print : 'yes' if you want) : ")
+        if answer == "yes":
+            print("server mod")
+            serv()
+        else:
+            menu()
 def pipe():
     print("ADD a PIPE")
     print("\n 1 : with IP \n 2 : with Name")
@@ -165,13 +251,6 @@ def add():
         if namedb == 1:
             print("nom enregistré")
             menu()
-
-
-
-
-
-
-
     
 def menu():
 
@@ -188,7 +267,7 @@ def menu():
     
     
     elif answer == "2":
-        pipe()
+        conn()
         menu()
         pass
     elif answer == "3":
@@ -225,13 +304,5 @@ print(" \n**********")
 #debut
 menu()
 
-
-
-
-
-
-
-
-
-
+#fin
 mydb.close()
